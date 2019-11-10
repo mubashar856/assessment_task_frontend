@@ -1,28 +1,43 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <v-app>
+        <v-app-bar app color="teal">
+            <v-toolbar-title>Cric Stats</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn to="/matches" class="mr-2">
+                Matches
+            </v-btn>
+            <v-btn to="/point-table" class="mr-2">
+                Point Table
+            </v-btn>
+            <v-btn @click="scheduleMatches" class="mr-2" :loading="matchLoader">
+                Schedule Matches
+            </v-btn>
+        </v-app-bar>
+        <v-content>
+            <div style="height: 12px; width: 100%;"></div>
+            <v-container>
+                <router-view></router-view>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import matchService from './services/match'
+  export default {
+    name: 'App',
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    data: () => ({
+      matchLoader: false
+    }),
+    methods: {
+      scheduleMatches: function () {
+        this.matchLoader = true
+        matchService.scheduleMatches().then(resp => {
+          console.log(resp)
+          this.matchLoader = false
+        })
+      }
+    }
+  };
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
